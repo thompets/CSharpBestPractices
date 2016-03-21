@@ -18,8 +18,7 @@
             // Code to send an email
 
             var confirmation = "Message sent: " + subject;
-            var loggingService = new LoggingService();
-            loggingService.LogAction(confirmation);
+            LoggingService.LogAction(confirmation);
             return confirmation;
         }
 
