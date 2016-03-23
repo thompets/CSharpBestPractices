@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Acme.Biz;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Acme.Biz.Tests
 {
@@ -13,7 +14,7 @@ namespace Acme.Biz.Tests
 			currentProduct.ProductName = "Saw";
 			currentProduct.ProductId = 1;
 			currentProduct.Description = "15-inch steel blade hand saw";
-			currentProduct.ProductVendor.CompanyName = "ABC Corp";			
+			currentProduct.ProductVendor.CompanyName = "ABC Corp";
 
 			var expected = "Hello Saw (1): 15-inch steel blade hand saw" +
 				" Available on: ";
@@ -197,7 +198,7 @@ namespace Acme.Biz.Tests
 			var currentProduct = new Product();
 
 			var expected = "Tools";
-			
+
 			// Act
 			var actual = currentProduct.Category;
 
@@ -213,7 +214,7 @@ namespace Acme.Biz.Tests
 			currentProduct.Category = "Garden";
 
 			var expected = "Garden";
-			
+
 			// Act
 			var actual = currentProduct.Category;
 
@@ -228,7 +229,7 @@ namespace Acme.Biz.Tests
 			var currentProduct = new Product();
 
 			var expected = 1;
-			
+
 			// Act
 			var actual = currentProduct.SequenceNumber;
 
@@ -244,7 +245,7 @@ namespace Acme.Biz.Tests
 			currentProduct.SequenceNumber = 5;
 
 			var expected = 5;
-			
+
 			// Act
 			var actual = currentProduct.SequenceNumber;
 
@@ -262,6 +263,21 @@ namespace Acme.Biz.Tests
 
 			// Act
 			var actual = currentProduct.ProductCode;
+
+			// Assert
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod()]
+		public void CalculateSuggestedPriceTest()
+		{
+			// Arrange
+			var currentProduct = new Product(1, "Saw", "");
+			currentProduct.Cost = 50m;
+			var expected = 55m;
+
+			// Act
+			var actual = currentProduct.CalculateSuggestedPrice(10m);
 
 			// Assert
 			Assert.AreEqual(expected, actual);
