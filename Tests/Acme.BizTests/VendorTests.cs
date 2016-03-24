@@ -1,5 +1,4 @@
-﻿using Acme.Biz;
-using Acme.Common;
+﻿using Acme.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -60,7 +59,7 @@ namespace Acme.Biz.Tests
 			var vendor = new Vendor();
 			var product = new Product(1, "Saw", "");
 			var expected = new OperationResult(true,
-				"Order from Acme, Inc.\r\nProduct: Tools-1\r\nQuantity: 12" + 
+				"Order from Acme, Inc.\r\nProduct: Tools-0001\r\nQuantity: 12" +
 				"\r\nInstructions: standard delivery");
 
 			// Act
@@ -78,8 +77,8 @@ namespace Acme.Biz.Tests
 			var vendor = new Vendor();
 			var product = new Product(1, "Saw", "");
 			var expected = new OperationResult(true,
-				"Order from Acme, Inc.\r\nProduct: Tools-1\r\nQuantity: 12" +
-				"\r\nDeliver By: 3/25/2016" + 
+				"Order from Acme, Inc.\r\nProduct: Tools-0001\r\nQuantity: 12" +
+				"\r\nDeliver By: 3/25/2016" +
 				"\r\nInstructions: standard delivery");
 
 			// Act
@@ -114,8 +113,8 @@ namespace Acme.Biz.Tests
 			var expected = new OperationResult(true, "Test With Address");
 
 			// Act
-			var actual = vendor.PlaceOrder(product, 12, 
-										   Vendor.IncludeAddress.Yes, 
+			var actual = vendor.PlaceOrder(product, 12,
+										   Vendor.IncludeAddress.Yes,
 										   Vendor.SendCopy.No);
 
 			// Assert
@@ -130,7 +129,7 @@ namespace Acme.Biz.Tests
 			var vendor = new Vendor();
 			var product = new Product(1, "Saw", "");
 			var expected = new OperationResult(true,
-						"Order from Acme, Inc.\r\nProduct: Tools-1\r\nQuantity: 12" +
+						"Order from Acme, Inc.\r\nProduct: Tools-0001\r\nQuantity: 12" +
 						"\r\nInstructions: Deliver to Suite 42");
 
 			// Act
@@ -139,6 +138,37 @@ namespace Acme.Biz.Tests
 			// Assert
 			Assert.AreEqual(expected.Success, actual.Success);
 			Assert.AreEqual(expected.Message, actual.Message);
+		}
+
+		[TestMethod()]
+		public void ToStringTest()
+		{
+			// Arrange
+			var vendor = new Vendor();
+			vendor.VendorId = 1;
+			vendor.CompanyName = "ABC Corp";
+			var expected = "Vendor: ABC Corp";
+
+			// Act
+			var actual = vendor.ToString();
+
+			// Assert
+			Assert.AreEqual(expected, actual);
+		}
+
+		[TestMethod()]
+		public void PrepareDirectionsTest()
+		{
+			// Arrange
+			var vendor = new Vendor();
+			var expected = @"Insert \r\n to define a new line";
+
+			// Act
+			var actual = vendor.PrepareDirections();
+			Console.WriteLine(actual);
+
+			// Assert			
+			Assert.AreEqual(expected, actual);
 		}
 	}
 }

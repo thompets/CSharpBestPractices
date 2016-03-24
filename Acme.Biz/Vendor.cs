@@ -1,5 +1,6 @@
 ﻿using Acme.Common;
 using System;
+using System.Text;
 
 namespace Acme.Biz
 {
@@ -8,13 +9,22 @@ namespace Acme.Biz
 	/// </summary>
 	public class Vendor
 	{
+		#region Enums
+
 		public enum IncludeAddress { Yes, No };
 		public enum SendCopy { Yes, No };
+
+		#endregion
+
+		#region Properties
 
 		public int VendorId { get; set; }
 		public string CompanyName { get; set; }
 		public string Email { get; set; }
 
+		#endregion
+
+		#region Methods
 
 		/// <summary>
 		/// Sends a product order to the vendor.
@@ -40,22 +50,23 @@ namespace Acme.Biz
 
 			var success = false;
 
-			var orderText = "Order from Acme, Inc." + Environment.NewLine +
+			var orderTextBuilder = new StringBuilder("Order from Acme, Inc." + Environment.NewLine +
 							"Product: " + product.ProductCode + Environment.NewLine +
-							"Quantity: " + quantity;
+							"Quantity: " + quantity);
 
 			if (deliverBy.HasValue)
 			{
-				orderText += Environment.NewLine +
-							 "Deliver By: " + deliverBy.Value.ToString("d");
+				orderTextBuilder.Append(Environment.NewLine +
+							 "Deliver By: " + deliverBy.Value.ToString("d"));
 			}
 
 			if (!string.IsNullOrEmpty(instructions))
 			{
-				orderText += Environment.NewLine +
-							 "Instructions: " + instructions;
+				orderTextBuilder.Append(Environment.NewLine +
+							 "Instructions: " + instructions);
 			}
 
+			var orderText = orderTextBuilder.ToString();
 			var emailService = new EmailService();
 			var confirmation = emailService.SendMessage("New Order", orderText, this.Email);
 
@@ -78,7 +89,7 @@ namespace Acme.Biz
 		/// <param name="sendCopy">True to send a copy of the email to the current user.</param>
 		/// <returns>Success flag and order text.</returns>
 		public OperationResult PlaceOrder(Product product, int quantity,
-										  IncludeAddress includeAddress, 
+										  IncludeAddress includeAddress,
 										  SendCopy sendCopy)
 		{
 			var orderText = "Test";
@@ -95,13 +106,54 @@ namespace Acme.Biz
 		/// </summary>
 		/// <returns></returns>
 		public string SendWelcomeEmail(string message)
-        {
-            var emailService = new EmailService();
-            var subject = ("Hello " + this.CompanyName).Trim();
-            var confirmation = emailService.SendMessage(subject,
-                                                        message, 
-                                                        this.Email);
-            return confirmation;
-        }
-    }
+		{
+			var emailService = new EmailService();
+			var subject = ("Hello " + this.CompanyName).Trim();
+			var confirmation = emailService.SendMessage(subject,
+														message,
+														this.Email);
+			return confirmation;
+		}
+
+		public override string ToString()
+		{
+			string vendorInfo = "Vendor: " + this.CompanyName;
+			string result;
+
+			result = vendorInfo?.ToLower();
+			result = vendorInfo?.ToUpper();
+			result = vendorInfo?.Replace("Vendor", "Supplier");
+
+			var length = vendorInfo?.Length;
+			var index = vendorInfo?.IndexOf(":");
+			var begins = vendorInfo?.StartsWith("Vendor");
+
+
+			return vendorInfo;
+		}
+
+		public string PrepareDirections()
+		{
+			var directions = @"Insert \r\n to define a new line";
+
+			return directions;
+		}
+
+		public string PrepareDirectionsOnTwoLines()
+		{
+			var directions = "First do this" + Environment.NewLine +
+							 "Then do that";
+
+			var directions2 = "First do this\r\nThen do that";
+
+			// code does not line up when using verbatim string literal.
+			// cannot add tabs or spaces as that would show up as well.
+			var directions3 = @"First do this
+Then do that";
+
+			return directions;
+		}
+
+		#endregion
+	}
 }
